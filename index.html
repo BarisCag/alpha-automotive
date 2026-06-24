@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Automotive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1c69d4;
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --surface-elevated: #1a1a26;
+            --border: rgba(255,255,255,0.08);
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a0;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --font: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: var(--font);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background-color: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(28, 105, 212, 0.3);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left .alpha { font-weight: 600; font-size: 1.5rem; }
+        .header-left .dot { width: 6px; height: 6px; background-color: var(--primary); border-radius: 50%; }
+        .header-left .automotive { font-weight: 300; font-size: 1.5rem; }
+        
+        .header-right { 
+            font-size: 0.875rem; 
+            color: var(--text-secondary); 
+        }
+
+        /* Tabs */
+        .tab-bar {
+            position: sticky;
+            top: 73px; 
+            width: 100%;
+            background-color: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 90;
+            display: flex;
+            padding: 0 2rem;
+            gap: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Layout */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; }
+            header { padding: 1rem; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .tab-bar { padding: 0 1rem; gap: 1rem; overflow-x: auto; top: 96px;}
+            main { padding: 1rem; }
+            .term-cards { flex-wrap: wrap; }
+            .term-card { flex-basis: calc(33.333% - 0.5rem); }
+        }
+
+        @media (max-width: 480px) {
+            .term-card { flex-basis: calc(50% - 0.5rem); }
+            .stat-cards { grid-template-columns: 1fr !important; }
+        }
+
+        /* Cards & Forms */
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .pill-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .pill {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .pill:hover {
+            border-color: rgba(255,255,255,0.3);
+            color: var(--text-primary);
+        }
+
+        .pill.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 2px 10px rgba(28, 105, 212, 0.3);
+        }
+        
+        select, input[type="number"] {
+            width: 100%;
+            background-color: var(--surface-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+            appearance: none;
+        }
+
+        select:focus, input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        select {
+            cursor: pointer;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%238888a0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position-x: calc(100% - 1rem);
+            background-position-y: center;
+        }
+        
+        .input-with-toggle {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .input-with-toggle input {
+            padding-right: 4rem;
+        }
+
+        .input-toggle-btn {
+            position: absolute;
+            right: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .input-toggle-btn:hover {
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .input-hint {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .input-hint.danger { color: var(--danger); font-weight: 500; }
+
+        .price-display {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: white;
+            background: var(--surface-elevated);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--surface-elevated);
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(28, 105, 212, 0.5);
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: linear-gradient(145deg, var(--surface) 0%, #151520 100%);
+            border-top: 2px solid rgba(255,255,255,0.05);
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.875rem;
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            background: rgba(28, 105, 212, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(28, 105, 212, 0.3);
+            position: relative;
+            cursor: help;
+        }
+        
+        .badge.ev {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border-color: rgba(34, 197, 94, 0.3);
+            cursor: default;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: var(--surface-elevated);
+            color: var(--text-primary);
+            text-align: left;
+            border-radius: 8px;
+            padding: 1rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            border: 1px solid var(--border);
+            width: 240px;
+            font-size: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--border) transparent transparent transparent;
+        }
+
+        .badge:hover .tooltip { 
+            visibility: visible; 
+            opacity: 1; 
+            transform: translateX(-50%) translateY(-4px);
+        }
+        
+        .tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .term-cards {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .term-card {
+            flex: 1;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .term-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .term-card.selected {
+            box-shadow: 0 0 0 2px var(--primary);
+            border-color: transparent;
+            background: rgba(28, 105, 212, 0.05);
+        }
+
+        .term-card.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+
+        .term-label { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500; }
+        .term-monthly { font-size: 1.125rem; font-weight: 600; color: white; margin-bottom: 0.5rem; }
+        .term-total { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.125rem; }
+        .term-interest { font-size: 0.75rem; color: var(--warning); font-weight: 500; }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2.5rem 0;
+            position: relative;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+        .donut-center-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 2px; }
+        .donut-center-value { font-size: 1.125rem; font-weight: 600; color: white; }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        .legend-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+
+        .affordability {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .affordability-bar-container {
+            width: 100%;
+            height: 6px;
+            background: var(--surface-elevated);
+            border-radius: 3px;
+            margin: 0.75rem 0;
+            overflow: hidden;
+        }
+        .affordability-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.6s ease;
+        }
+        .affordability-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+        }
+
+        .audit-panel {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 2.5rem;
+            overflow: hidden;
+        }
+        .audit-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.875rem;
+            background: rgba(255,255,255,0.03);
+            font-weight: 500;
+        }
+        .audit-header:hover { background: rgba(255,255,255,0.06); }
+        .audit-content {
+            padding: 1.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8125rem;
+            color: #a1a1aa;
+            display: none;
+            border-top: 1px solid var(--border);
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .audit-content.open { display: block; animation: fadeIn 0.3s ease; }
+        .copy-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+
+        /* Tab 2 Styles */
+        .clv-total {
+            font-size: 3rem;
+            font-weight: 600;
+            color: white;
+            margin: 0.5rem 0 1rem 0;
+            letter-spacing: -0.02em;
+        }
+        
+        .clv-badge {
+            display: inline-block;
+            padding: 0.375rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .bar-chart-container {
+            width: 100%;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+            margin: 2.5rem 0 1.5rem 0;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+        .stat-card {
+            background: var(--surface-elevated);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500;}
+        .stat-value { font-size: 1.125rem; font-weight: 600; color: white; }
+
+        .insight-box {
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid var(--primary);
+            padding: 1.25rem;
+            margin-top: 2.5rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 2rem;
+            margin-top: auto;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            background: #08080c;
+        }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .footer-top {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            align-items: flex-start;
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .footer-bottom { flex-direction: column; gap: 1rem; }
+        }
+
+        /* Value Animations */
+        .value-change {
+            animation: valueAnim 0.4s ease-out;
+        }
+        @keyframes valueAnim {
+            0% { opacity: 0; transform: translateY(-4px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <span class="alpha">Alpha</span>
+        <span class="dot"></span>
+        <span class="automotive">Automotive</span>
+    </div>
+    <div class="header-right">
+        Borusan Oto Adana-Mersin
+    </div>
+</header>
+
+<div class="tab-bar">
+    <div class="tab active" data-target="tab1">Finansman Simülatörü</div>
+    <div class="tab" data-target="tab2">Müşteri Değer Analizi</div>
+</div>
+
+<main>
+    <!-- TAB 1 -->
+    <div id="tab1" class="tab-content active">
+        <div class="two-column">
+            <!-- Left: Inputs -->
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">Marka Seçimi</label>
+                    <div class="pill-group" id="brandPills">
+                        <button class="pill active" data-val="BMW">BMW</button>
+                        <button class="pill" data-val="BMW i">BMW i</button>
+                        <button class="pill" data-val="MINI">MINI</button>
+                        <button class="pill" data-val="Land Rover">Land Rover</button>
+                        <button class="pill" data-val="BMW Motorrad">BMW Motorrad</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Model Seçimi</label>
+                    <select id="modelSelect"></select>
+                </div>
+
+                <div class="form-group" id="packageGroup" style="display:none">
+                    <label class="form-label">Paket / Versiyon</label>
+                    <select id="packageSelect"></select>
+                </div>
+
+                <div class="price-display" id="vehiclePriceDisplay"></div>
+
+                <div class="form-group">
+                    <label class="form-label">Peşinat Tutarı / Oranı</label>
+                    <div class="input-with-toggle">
+                        <input type="number" id="dpInput" min="0">
+                        <button type="button" class="input-toggle-btn" id="dpToggle">₺ / %</button>
+                    </div>
+                    <div id="dpHint" class="input-hint"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Müşteri Tipi</label>
+                    <div class="pill-group" id="custPills">
+                        <button class="pill active" data-val="Bireysel">Bireysel</button>
+                        <button class="pill" data-val="Kurumsal">Kurumsal</button>
+                        <button class="pill" data-val="Filo">Filo</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Kredi Profili</label>
+                    <div class="pill-group" id="credPills">
+                        <button class="pill" data-val="Mükemmel">Mükemmel</button>
+                        <button class="pill active" data-val="İyi">İyi</button>
+                        <button class="pill" data-val="Standart">Standart</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Para Birimi</label>
+                    <div class="pill-group" id="currPills">
+                        <button class="pill active" data-val="TRY">TRY</button>
+                        <button class="pill" data-val="EUR">EUR</button>
+                        <button class="pill" data-val="USD">USD</button>
+                    </div>
+                    <div id="fxNote" style="display:none; color:var(--warning); font-size:0.75rem; margin-top:0.5rem;"></div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">Aylık net gelir (TRY) <span style="font-weight:normal; color:var(--text-secondary)">(Opsiyonel)</span></label>
+                    <input type="number" id="incomeInput" placeholder="Örn: 150000">
+                </div>
+            </div>
+
+            <!-- Right: Results -->
+            <div class="card results-panel">
+                <div class="badge-container">
+                    <div class="badge" id="effRateBadge">
+                        <span id="effRateText">Efektif Aylık Oran: %0,00</span>
+                        <div class="tooltip" id="effRateTooltip"></div>
+                    </div>
+                    <div class="badge ev" id="evBadge" style="display:none;">EV İndirimi ✓ -0.15%</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Vade Karşılaştırması</label>
+                    <div class="term-cards">
+                        <div class="term-card" data-term="12">
+                            <div class="term-label">12 ay</div>
+                            <div class="term-monthly">-</div>
+                            <div class="term-total">-</div>
+                            <div class="term-interest">-</div>
+                        </div>
+                        <div class="term-card" data-term="24">
+                            <div class="term-label">24 ay</div>
+                            <div class="term-monthly">-</div>
+                            <div class="term-total">-</div>
+                            <div class="term-interest">-</div>
+                        </div>
+                        <div class="term-card selected" data-term="36">
+                            <div class="term-label">36 ay</div>
+                            <div class="term-monthly">-</div>
+                            <div class="term-total">-</div>
+                            <div class="term-interest">-</div>
+                        </div>
+                        <div class="term-card" data-term="48">
+                            <div class="term-label">48 ay</div>
+                            <div class="term-monthly">-</div>
+                            <div class="term-total">-</div>
+                            <div class="term-interest">-</div>
+                        </div>
+                        <div class="term-card" data-term="60">
+                            <div class="term-label">60 ay</div>
+                            <div class="term-monthly">-</div>
+                            <div class="term-total">-</div>
+                            <div class="term-interest">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="donutCanvas" width="200" height="200"></canvas>
+                    <div class="donut-center">
+                        <div class="donut-center-label">Toplam</div>
+                        <div class="donut-center-value" id="donutTotal">-</div>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:#1c69d4"></div> Peşinat: <span id="legendDp"></span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.18)"></div> Kredi: <span id="legendLoan"></span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Toplam Faiz: <span id="legendInt"></span></div>
+                </div>
+
+                <div class="affordability" id="affordabilitySection" style="display:none;">
+                    <div class="form-label" style="margin-bottom:0.25rem;">Ödeme/Gelir Oranı</div>
+                    <div class="affordability-labels">
+                        <span id="affText"></span>
+                        <span id="affPct" style="font-weight:600; color:white;"></span>
+                    </div>
+                    <div class="affordability-bar-container">
+                        <div class="affordability-bar" id="affBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="audit-panel">
+                    <div class="audit-header" id="auditToggle">
+                        <div>Hesaplama Denetim Kaydı <span id="auditId" style="font-family:monospace; margin-left:8px; color:var(--text-secondary)"></span></div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <button class="copy-btn" id="copyAuditBtn">Kopyala</button>
+                            <span class="audit-toggle-icon" id="auditIcon">▶</span>
+                        </div>
+                    </div>
+                    <div class="audit-content" id="auditContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2 -->
+    <div id="tab2" class="tab-content">
+        <div class="two-column">
+            <!-- Left: Inputs -->
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">Müşteri Segmenti</label>
+                    <div class="pill-group" id="t2SegPills">
+                        <button class="pill" data-val="İlk Alıcı">İlk Alıcı</button>
+                        <button class="pill active" data-val="Tekrar Alıcı">Tekrar Alıcı</button>
+                        <button class="pill" data-val="Filo Müşterisi">Filo Müşterisi</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Araç Kademesi</label>
+                    <div class="pill-group" id="t2TierPills">
+                        <button class="pill" data-val="Giriş">Giriş</button>
+                        <button class="pill" data-val="Orta">Orta</button>
+                        <button class="pill active" data-val="Premium">Premium</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Marka Tercihi</label>
+                    <select id="t2BrandSelect">
+                        <option value="BMW">BMW</option>
+                        <option value="BMW i">BMW i</option>
+                        <option value="MINI">MINI</option>
+                        <option value="Land Rover">Land Rover</option>
+                        <option value="BMW Motorrad">BMW Motorrad</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Servis Kullanımı</label>
+                    <div class="pill-group" id="t2SrvPills">
+                        <button class="pill active" data-val="Yetkili Servis">Yetkili Servis</button>
+                        <button class="pill" data-val="Karma">Karma</button>
+                        <button class="pill" data-val="Bağımsız">Bağımsız</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Finansman Tercihi</label>
+                    <div class="pill-group" id="t2FinPills">
+                        <button class="pill active" data-val="Kredili">Kredili</button>
+                        <button class="pill" data-val="Peşin">Peşin</button>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+                        Tahmini Yıllık Kilometre <span id="kmLabel" style="color:white; font-weight:600;">20.000 km</span>
+                    </label>
+                    <input type="range" id="kmSlider" min="10000" max="50000" step="5000" value="20000">
+                </div>
+            </div>
+
+            <!-- Right: Results -->
+            <div class="card results-panel">
+                <div class="form-label" style="font-size:1rem;">Tahmini 10 Yıllık Müşteri Değeri</div>
+                <div class="clv-total" id="clvTotal"></div>
+                <div class="clv-badge" id="clvBadge"></div>
+                <div style="font-size:0.75rem; color:var(--text-secondary);">İskonto oranı: %15 · NPV bazlı tahmin</div>
+                
+                <div class="bar-chart-container" id="barContainer">
+                    <canvas id="barCanvas" height="28"></canvas>
+                </div>
+                
+                <div class="legend" style="margin-top:0.5rem; gap:1.25rem;">
+                    <div class="legend-item"><div class="legend-dot" style="background:#1c69d4"></div> Araç Marjı: <span id="legVeh"></span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Finansman: <span id="legFin"></span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Servis: <span id="legSrv"></span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Aksesuar: <span id="legAcc"></span></div>
+                </div>
+                
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <div class="stat-label">Tahmini Satın Alma Sayısı</div>
+                        <div class="stat-value" id="clvPurchases"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Ortalama Değişim Süresi</div>
+                        <div class="stat-value" id="clvInterval"></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Yıllık Ortalama Değer</div>
+                        <div class="stat-value" id="clvAnnual"></div>
+                    </div>
+                </div>
+                
+                <div class="insight-box" id="clvInsight"></div>
+                
+                <div style="margin-top:2rem; font-size:0.75rem; color:var(--text-secondary); padding-top:1rem; border-top:1px solid var(--border);">
+                    Bu tahminler istatistiksel varsayımlara dayanmaktadır. Gerçek değer müşteri davranışına ve piyasa koşullarına göre değişir.
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-top">
+            <span>Borusan Oto Adana-Mersin</span>
+            <span style="color:var(--border)">|</span>
+            <span>Adana-Mersin Karayolu</span>
+            <span style="color:var(--border)">|</span>
+            <span>BMW</span>
+            <span style="color:var(--border)">|</span>
+            <span>BMW i</span>
+            <span style="color:var(--border)">|</span>
+            <span>MINI</span>
+            <span style="color:var(--border)">|</span>
+            <span>Land Rover</span>
+            <span style="color:var(--border)">|</span>
+            <span>BMW Motorrad</span>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border); width:100%;">
+        <div class="footer-bottom">
+            <div style="flex:1;">Bu araç, Borusan Oto Adana-Mersin satış danışmanları için bilgilendirme amaçlıdır. Resmi BMW veya Borusan Oto ürünü değildir. Hesaplamalar tahmini nitelikte olup kesin koşullar için yetkili danışmanınıza başvurunuz.</div>
+            <div style="white-space:nowrap; text-align:right;">Alpha Automotive &copy; 2025<br>Geliştirici: Barış</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Logic & Data Engine
+
+const CATALOG = {
+  "BMW": {
+    minDownPct: 20, maxTermMonths: 60, isEV: false,
+    models: {
+      "120": { packages: [{ name: "Sport Line", price: 3724500 }, { name: "M Sport", price: 4283100 }] },
+      "220 Gran Coup\u00E9": { packages: [{ name: "Sport Line", price: 4152800 }, { name: "M Sport", price: 4427800 }] },
+      "220i Active Tourer": { packages: [{ name: "Luxury Line", price: 4379500 }, { name: "M Sport", price: 4613200 }] },
+      "230e xDrive Active Tourer": { isEV: true, packages: [{ name: "Luxury Line", price: 5031800 }, { name: "M Sport", price: 5371800 }] },
+      "320i Sedan": { packages: [{ name: "Sport Line", price: 5529000 }, { name: "M Sport", price: 5990700 }] },
+      "420i Coup\u00E9": { packages: [{ name: "M Sport", price: 6905900 }, { name: "Edition M Sport", price: 7712500 }] },
+      "430i xDrive Cabrio": { packages: [{ name: "M Sport", price: 10004800 }] },
+      "420i Gran Coup\u00E9": { packages: [{ name: "M Sport", price: 6586700 }, { name: "Edition M Sport", price: 7396900 }] },
+      "520i Sedan": { packages: [{ name: "M Sport", price: 8479100 }, { name: "Edition M Sport", price: 9023100 }] },
+      "520d xDrive Sedan": { packages: [{ name: "M Sport", price: 11254800 }, { name: "Edition M Sport", price: 12387400 }] },
+      "740d xDrive Sedan": { packages: [{ name: "Pure Excellence", price: 20818200 }, { name: "M Excellence", price: 21870500 }] },
+      "X1 xDrive20i": { packages: [{ name: "X-Line", price: 4753800 }, { name: "M Sport", price: 5015400 }] },
+      "X1 xDrive25e": { isEV: true, packages: [{ name: "X-Line", price: 5469400 }, { name: "M Sport", price: 5739800 }] },
+      "X2 sDrive20i": { packages: [{ name: "M Sport", price: 5544400 }] },
+      "X3 20": { packages: [{ name: "X-Line", price: 6853400 }, { name: "M Sport", price: 7316600 }] },
+      "X5 xDrive40d": { packages: [{ name: "M Sport", price: 17751100 }] },
+      "X6 xDrive40d": { packages: [{ name: "M Sport", price: 17790400 }] },
+      "X7 xDrive40d": { packages: [{ name: "M Excellence", price: 22405500 }] }
+    }
+  },
+  "BMW i": {
+    minDownPct: 20, maxTermMonths: 60, isEV: true,
+    models: {
+      "i7 xDrive60": { packages: [{ name: "Pure Excellence", price: 14188000 }, { name: "M Excellence", price: 14709200 }] },
+      "iX1 eDrive20": { packages: [{ name: "Sport Line", price: 4064300 }, { name: "X-Line", price: 4278000 }, { name: "M Sport", price: 4438300 }] },
+      "iX2 eDrive20": { packages: [{ name: "M Sport", price: 4498600 }] },
+      "iX3 xDrive50": { packages: [{ name: "M Sport", price: 6538400 }] },
+      "iX xDrive60": { packages: [{ name: "M Sport", price: 10343600 }] },
+      "iX M70 xDrive": { packages: [{ name: "M", price: 11095800 }] }
+    }
+  },
+  "MINI": {
+    minDownPct: 20, maxTermMonths: 60, isEV: false,
+    models: {
+      "Countryman E": { isEV: true, packages: [
+        { name: "Favoured", price: 2493500 },
+        { name: "John Cooper Works", price: 4250100 }
+      ] },
+      "Countryman SE ALL4": { isEV: true, packages: [
+        { name: "John Cooper Works", price: 5533400 }
+      ] },
+      "Countryman C": { packages: [
+        { name: "Dark Edition", price: 3780100 },
+        { name: "Favoured", price: 3780100 },
+        { name: "Trail Edition", price: 4400700 },
+        { name: "John Cooper Works", price: 4800100 }
+      ] },
+      "Countryman S ALL4": { packages: [
+        { name: "John Cooper Works", price: 6451100 }
+      ] },
+      "JCW Countryman ALL4": { packages: [
+        { name: "John Cooper Works", price: 6999600 }
+      ] }
+    }
+  },
+  "Land Rover": {
+    minDownPct: 25, maxTermMonths: 60, isEV: false,
+    models: {
+      "Range Rover SWB": { packages: [
+        { name: "Signature 3.0 D 300", price: 26683002 },
+        { name: "Signature Plus 3.0 D 300", price: 28110023 },
+        { name: "Autobiography 3.0 D 350", price: 32496013 },
+        { name: "Autobiography 3.0 PHEV 460", price: 32558970 },
+        { name: "Autobiography 4.4 V8 530", price: 35515210 }
+      ]},
+      "Range Rover LWB": { packages: [
+        { name: "Autobiography 3.0 D 350", price: 33671207 },
+        { name: "Autobiography 7 Koltuk 3.0 D 350", price: 32789812 },
+        { name: "Autobiography 3.0 PHEV 460", price: 33020653 },
+        { name: "Autobiography 4.4 V8 530", price: 36732375 }
+      ]},
+      "Range Rover Evoque": { packages: [
+        { name: "S 1.5 P160 MHEV", price: 6339946 },
+        { name: "Dynamic SE 1.5 P160 MHEV", price: 6934101 },
+        { name: "S 1.5 P270 PHEV", price: 7808938 },
+        { name: "Dynamic SE 1.5 P270 PHEV", price: 8267998 }
+      ]},
+      "Range Rover Velar": { packages: [
+        { name: "S 2.0 D204 MHEV", price: 10887887 },
+        { name: "Dynamic SE 2.0 D204 MHEV", price: 12068918 }
+      ]},
+      "Defender 110": { packages: [
+        { name: "Ultimate", price: 13713901 },
+        { name: "Octa", price: 33668478 },
+        { name: "Octa Black", price: 35997879 }
+      ]},
+      "Discovery": { packages: [
+        { name: "Dynamic HSE", price: 16211188 }
+      ]},
+      "Discovery Sport": { packages: [
+        { name: "Dynamic S", price: 8010925 },
+        { name: "Landmark", price: 8640493 }
+      ]}
+    }
+  },
+  "BMW Motorrad": {
+    "minDownPct": 30,
+    "maxTermMonths": 36,
+    "isEV": false,
+    "models": {
+        "CE 04": {
+            "packages": [
+                {
+                    "name": "Avantgarde",
+                    "price": 929530
+                },
+                {
+                    "name": "Beyaz",
+                    "price": 940370
+                },
+                {
+                    "name": "Exclusive",
+                    "price": 953920
+                }
+            ],
+            "isEV": true
+        },
+        "C 400 GT": {
+            "packages": [
+                {
+                    "name": "Triple Black",
+                    "price": 813956
+                },
+                {
+                    "name": "Style Exclusive",
+                    "price": 833270
+                }
+            ]
+        },
+        "C 400 X": {
+            "packages": [
+                {
+                    "name": "Triple Black",
+                    "price": 698071
+                },
+                {
+                    "name": "Style Rugged",
+                    "price": 722903
+                }
+            ]
+        },
+        "F 450 GS": {
+            "packages": [
+                {
+                    "name": "Exclusive",
+                    "price": 666660
+                },
+                {
+                    "name": "Sport",
+                    "price": 680210
+                },
+                {
+                    "name": "GS Trophy",
+                    "price": 710020
+                }
+            ]
+        },
+        "F 800 GS": {
+            "packages": [
+                {
+                    "name": "Beyaz",
+                    "price": 1013540
+                },
+                {
+                    "name": "Sport",
+                    "price": 1027090
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 1027090
+                }
+            ]
+        },
+        "F 900 GS": {
+            "packages": [
+                {
+                    "name": "Metalik Siyah",
+                    "price": 1111100
+                },
+                {
+                    "name": "GS Trophy",
+                    "price": 1143620
+                },
+                {
+                    "name": "Passion",
+                    "price": 1224920
+                }
+            ]
+        },
+        "F 900 GS Adventure": {
+            "packages": [
+                {
+                    "name": "Metalik Siyah",
+                    "price": 1268280
+                },
+                {
+                    "name": "Sage Green",
+                    "price": 1284540
+                }
+            ]
+        },
+        "F 900 R": {
+            "packages": [
+                {
+                    "name": "Snapper Rocks",
+                    "price": 910560
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 934950
+                },
+                {
+                    "name": "Sport",
+                    "price": 956630
+                }
+            ]
+        },
+        "F 900 XR": {
+            "packages": [
+                {
+                    "name": "Yar\u0131\u015F K\u0131rm\u0131z\u0131s\u0131",
+                    "price": 1024380
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 1046060
+                },
+                {
+                    "name": "Sport",
+                    "price": 1056900
+                }
+            ]
+        },
+        "R 1300 GS": {
+            "packages": [
+                {
+                    "name": "Yar\u0131\u015F K\u0131rm\u0131z\u0131s\u0131 (Tel Jant)",
+                    "price": 1945780
+                },
+                {
+                    "name": "GS Trophy",
+                    "price": 1989140
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 1983720
+                },
+                {
+                    "name": "Option 719 Biscaya",
+                    "price": 2130060
+                }
+            ]
+        },
+        "R 1300 GS Adventure": {
+            "packages": [
+                {
+                    "name": "K\u0131rm\u0131z\u0131 (Tel Jant)",
+                    "price": 2127350
+                },
+                {
+                    "name": "GS Trophy",
+                    "price": 2195100
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 2176130
+                },
+                {
+                    "name": "Option 719 Karakorum",
+                    "price": 2292660
+                }
+            ]
+        },
+        "R 1300 RT": {
+            "packages": [
+                {
+                    "name": "Alpine Beyaz III",
+                    "price": 2211360
+                },
+                {
+                    "name": "Met. Yar\u0131\u015F Mavisi",
+                    "price": 2336020
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 2311630
+                },
+                {
+                    "name": "Option 719 Camargue",
+                    "price": 2439000
+                }
+            ]
+        },
+        "R 1300 R": {
+            "packages": [
+                {
+                    "name": "Snapper Rocks",
+                    "price": 1495920
+                },
+                {
+                    "name": "Light Beyaz",
+                    "price": 1620580
+                },
+                {
+                    "name": "Yar\u0131\u015F Mavisi Exclusive",
+                    "price": 1571800
+                },
+                {
+                    "name": "Option 719 Siyah",
+                    "price": 1680200
+                }
+            ]
+        },
+        "R 1300 RS": {
+            "packages": [
+                {
+                    "name": "Yar\u0131\u015F Mavisi",
+                    "price": 1626000
+                },
+                {
+                    "name": "Triple Black",
+                    "price": 1674780
+                },
+                {
+                    "name": "Light Beyaz",
+                    "price": 1642260
+                },
+                {
+                    "name": "Option 719 Cuyamaca",
+                    "price": 1794020
+                }
+            ]
+        },
+        "R 12": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 1268280
+                },
+                {
+                    "name": "Gravity Blue",
+                    "price": 1311640
+                },
+                {
+                    "name": "Option 719 Meteoric Dust II",
+                    "price": 1482370
+                }
+            ]
+        },
+        "R 12 nineT": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 1457980
+                },
+                {
+                    "name": "Imperial Blue",
+                    "price": 1474240
+                },
+                {
+                    "name": "Option 719 Aluminium",
+                    "price": 1647680
+                }
+            ]
+        },
+        "R 12 S": {
+            "packages": [
+                {
+                    "name": "Daytona",
+                    "price": 1691040
+                }
+            ]
+        },
+        "R 12 G/S": {
+            "packages": [
+                {
+                    "name": "Mat Siyah",
+                    "price": 1414620
+                },
+                {
+                    "name": "Light Beyaz",
+                    "price": 1441720
+                },
+                {
+                    "name": "Option 719 Aragonite",
+                    "price": 1539280
+                }
+            ]
+        },
+        "R 18": {
+            "packages": [
+                {
+                    "name": "Standart",
+                    "price": 1907840
+                }
+            ]
+        },
+        "R 18 Classic": {
+            "packages": [
+                {
+                    "name": "Standart",
+                    "price": 2075860
+                }
+            ]
+        },
+        "R 18 Roctane": {
+            "packages": [
+                {
+                    "name": "Standart",
+                    "price": 2119220
+                }
+            ]
+        },
+        "R 18 B": {
+            "packages": [
+                {
+                    "name": "Standart",
+                    "price": 2460680
+                }
+            ]
+        },
+        "R 18 Transcontinental": {
+            "packages": [
+                {
+                    "name": "Standart",
+                    "price": 2536560
+                }
+            ]
+        },
+        "K 1600 GT": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 2083990
+                },
+                {
+                    "name": "Sport",
+                    "price": 2135481
+                },
+                {
+                    "name": "Option 719 Blue Ridge",
+                    "price": 2352280
+                }
+            ]
+        },
+        "K 1600 GTL": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 2246590
+                },
+                {
+                    "name": "Exclusive",
+                    "price": 2314340
+                },
+                {
+                    "name": "Option 719 Blue Ridge",
+                    "price": 2525720
+                }
+            ]
+        },
+        "K 1600 B": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 2178840
+                },
+                {
+                    "name": "Exclusive",
+                    "price": 2208650
+                }
+            ]
+        },
+        "K 1600 Grand America": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 2341440
+                },
+                {
+                    "name": "Exclusive",
+                    "price": 2371250
+                }
+            ]
+        },
+        "S 1000 R": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 1368550
+                },
+                {
+                    "name": "Sport",
+                    "price": 1504050
+                },
+                {
+                    "name": "M Motorsport",
+                    "price": 1647680
+                }
+            ]
+        },
+        "S 1000 RR": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 1739820
+                },
+                {
+                    "name": "Blue Stone",
+                    "price": 1848220
+                },
+                {
+                    "name": "M Motorsport",
+                    "price": 2010820
+                }
+            ]
+        },
+        "S 1000 XR": {
+            "packages": [
+                {
+                    "name": "Met. Siyah",
+                    "price": 1674780
+                },
+                {
+                    "name": "Sage Ye\u015Fil",
+                    "price": 1701880
+                },
+                {
+                    "name": "M Motorsport",
+                    "price": 1924100
+                }
+            ]
+        },
+        "M 1000 R": {
+            "packages": [
+                {
+                    "name": "M Motorsport",
+                    "price": 1707300
+                }
+            ]
+        },
+        "M 1000 RR": {
+            "packages": [
+                {
+                    "name": "M Motorsport",
+                    "price": 2720840
+                }
+            ]
+        },
+        "M 1000 XR": {
+            "packages": [
+                {
+                    "name": "M Motorsport",
+                    "price": 2246590
+                }
+            ]
+        }
+    }
+}
+};
+
+const BASE_RATES = { 12: 0.0280, 24: 0.0300, 36: 0.0320, 48: 0.0340, 60: 0.0360 };
+const CREDIT_ADJ = { "M\u00FCkemmel": -0.0020, "\u0130yi": 0.0000, "Standart": +0.0040 };
+const CUSTOMER_ADJ = { "Bireysel": 0.0000, "Kurumsal": -0.0010, "Filo": -0.0030 };
+const EV_BONUS = -0.0015;
+const FX_ADJ = { "TRY": 0.0000, "EUR": -0.0180, "USD": -0.0190 };
+
+function effectiveRate(term, creditProfile, customerType, isEV, currency) {
+  let r = BASE_RATES[term] + CREDIT_ADJ[creditProfile] + CUSTOMER_ADJ[customerType];
+  if (isEV) r += EV_BONUS;
+  r += FX_ADJ[currency];
+  return Math.max(r, 0.005);
+}
+
+function pmt(pv, r, n) {
+  if (r === 0) return pv / n;
+  return pv * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+}
+
+function generateAuditId(params) {
+  const str = JSON.stringify(params);
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const ts = Date.now().toString(16).toUpperCase();
+  const chk = Math.abs(hash).toString(16).toUpperCase().padStart(6,'0').slice(0,6);
+  return `AQ-${ts}-${chk}`;
+}
+
+const fmt = n => new Intl.NumberFormat('tr-TR', {maximumFractionDigits: 0}).format(n) + ' \u20BA';
+const fmtPct = n => '%' + n.toFixed(2).replace('.', ',');
+
+// State Models
+let s1 = {
+  brand: "BMW",
+  model: "320i Sedan",
+  pkgIndex: 0,
+  downMode: "pct", // 'pct' | 'amt'
+  downValue: 20,
+  customer: "Bireysel",
+  credit: "\u0130yi",
+  currency: "TRY",
+  term: 36,
+  income: ""
+};
+
+let s2 = {
+  segment: "Tekrar Al\u0131c\u0131",
+  tier: "Premium",
+  brand: "BMW",
+  service: "Yetkili Servis",
+  finance: "Kredili",
+  km: 20000
+};
+
+// Utilities
+function updateTextAnim(el, text) {
+    if (el.textContent !== text) {
+        el.textContent = text;
+        el.classList.remove('value-change');
+        void el.offsetWidth;
+        el.classList.add('value-change');
+    }
+}
+
+// Canvas Drawings
+let donutAnimId;
+function drawDonut(downAmt, loanAmt, interestAmt) {
+    const canvas = document.getElementById('donutCanvas');
+    const ctx = canvas.getContext('2d');
+    const total = downAmt + loanAmt + interestAmt;
+    if (total <= 0) return;
+    
+    const p1 = downAmt / total;
+    const p2 = loanAmt / total;
+    const p3 = interestAmt / total;
+    
+    let startTime = null;
+    const duration = 600;
+    
+    cancelAnimationFrame(donutAnimId);
+    
+    function animate(time) {
+        if (!startTime) startTime = time;
+        const progress = Math.min((time - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        
+        ctx.clearRect(0, 0, 200, 200);
+        
+        const cx = 100, cy = 100, radius = 80;
+        const thickness = radius * 0.28;
+        let currentAngle = -Math.PI / 2;
+        const totalAngle = 2 * Math.PI * ease;
+        
+        const drawSegment = (percent, color) => {
+            const segmentAngle = totalAngle * percent;
+            if (segmentAngle <= 0) return;
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, currentAngle, currentAngle + segmentAngle);
+            ctx.lineWidth = thickness;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+            currentAngle += segmentAngle;
+        };
+        
+        drawSegment(p1, '#1c69d4');
+        drawSegment(p2, 'rgba(255,255,255,0.18)');
+        drawSegment(p3, '#f59e0b');
+        
+        if (progress < 1) {
+            donutAnimId = requestAnimationFrame(animate);
+        }
+    }
+    donutAnimId = requestAnimationFrame(animate);
+}
+
+let barAnimId;
+function drawBarChart(vehicle, finance, service, accessory) {
+    const canvas = document.getElementById('barCanvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('barContainer');
+    
+    // Fit canvas width to container
+    canvas.width = container.clientWidth;
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    const total = vehicle + finance + service + accessory;
+    if (total <= 0) {
+        ctx.clearRect(0, 0, width, height);
+        return;
+    }
+    
+    const p1 = vehicle / total;
+    const p2 = finance / total;
+    const p3 = service / total;
+    const p4 = accessory / total;
+    
+    let startTime = null;
+    const duration = 600;
+    
+    cancelAnimationFrame(barAnimId);
+    
+    function animate(time) {
+        if (!startTime) startTime = time;
+        const progress = Math.min((time - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        let currentX = 0;
+        const totalWidth = width * ease;
+        
+        const drawSeg = (percent, color, amount) => {
+            const segWidth = totalWidth * percent;
+            if (segWidth <= 0) return;
+            ctx.fillStyle = color;
+            ctx.fillRect(currentX, 0, segWidth, height);
+            
+            // Draw label if space
+            if (ease > 0.8 && segWidth > 60) {
+                ctx.fillStyle = '#fff';
+                ctx.font = '11px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const lbl = new Intl.NumberFormat('tr-TR', {notation: "compact"}).format(amount) + '\u20BA';
+                ctx.fillText(lbl, currentX + segWidth/2, height/2);
+            }
+            
+            currentX += segWidth;
+        };
+        
+        drawSeg(p1, '#1c69d4', vehicle);
+        drawSeg(p2, '#3b82f6', finance);
+        drawSeg(p3, '#f59e0b', service);
+        drawSeg(p4, '#22c55e', accessory);
+        
+        if (progress < 1) {
+            barAnimId = requestAnimationFrame(animate);
+        }
+    }
+    barAnimId = requestAnimationFrame(animate);
+}
+
+// Logic T1
+function updateModels() {
+    const sel = document.getElementById('modelSelect');
+    sel.innerHTML = '';
+    const models = Object.keys(CATALOG[s1.brand].models);
+    models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        sel.appendChild(opt);
+    });
+    if (models.includes(s1.model)) {
+        sel.value = s1.model;
+    } else {
+        s1.model = models[0];
+        sel.value = s1.model;
+    }
+    updatePackages();
+}
+
+function updatePackages() {
+    const pkgGroup = document.getElementById('packageGroup');
+    const pkgSel = document.getElementById('packageSelect');
+    const packages = CATALOG[s1.brand].models[s1.model].packages;
+    
+    pkgSel.innerHTML = '';
+    packages.forEach((pkg, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = pkg.name + ' \u2014 ' + fmt(pkg.price);
+        pkgSel.appendChild(opt);
+    });
+    
+    s1.pkgIndex = 0;
+    pkgSel.value = 0;
+    pkgGroup.style.display = packages.length <= 1 ? 'none' : 'block';
+}
+
+function calcT1() {
+    const brandData = CATALOG[s1.brand];
+    const modelData = brandData.models[s1.model];
+    const packageData = modelData.packages[s1.pkgIndex];
+    const price = packageData.price;
+    
+    updateTextAnim(document.getElementById('vehiclePriceDisplay'), fmt(price));
+    
+    // DP calculations
+    let dpAmt = 0, dpPct = 0;
+    const dpHint = document.getElementById('dpHint');
+    if (s1.downMode === 'pct') {
+        dpPct = s1.downValue;
+        dpAmt = price * (dpPct / 100);
+        dpHint.textContent = `E\u015Fde\u011Fer: ${fmt(dpAmt)}`;
+    } else {
+        dpAmt = s1.downValue;
+        dpPct = (dpAmt / price) * 100;
+        dpHint.textContent = `E\u015Fde\u011Fer: ${fmtPct(dpPct)}`;
+    }
+    
+    if (dpPct < brandData.minDownPct) {
+        dpHint.innerHTML = `\u26A0\uFE0F Minimum pe\u015Finat: ${fmtPct(brandData.minDownPct)} (${fmt(price * brandData.minDownPct / 100)})`;
+        dpHint.className = 'input-hint danger';
+    } else {
+        dpHint.className = 'input-hint';
+    }
+    
+    const effDpAmt = Math.max(dpAmt, price * brandData.minDownPct / 100);
+    const loanAmt = Math.max(0, price - effDpAmt);
+    const isEV = brandData.isEV || modelData.isEV === true;
+    
+    let selectedMonthly = 0, selectedInterest = 0;
+    
+    const terms = [12, 24, 36, 48, 60];
+    terms.forEach(t => {
+        const card = document.querySelector(`.term-card[data-term="${t}"]`);
+        if (t > brandData.maxTermMonths) {
+            card.classList.add('disabled');
+            card.title = `${s1.brand} maks. ${brandData.maxTermMonths} ay`;
+            if (s1.term === t) {
+                s1.term = brandData.maxTermMonths; 
+                document.querySelectorAll('.term-card').forEach(c => c.classList.remove('selected'));
+                document.querySelector(`.term-card[data-term="${s1.term}"]`).classList.add('selected');
+            }
+        } else {
+            card.classList.remove('disabled');
+            card.title = '';
+        }
+        
+        const r = effectiveRate(t, s1.credit, s1.customer, isEV, s1.currency);
+        const monthly = pmt(loanAmt, r, t);
+        const total = monthly * t;
+        const interest = total - loanAmt;
+        
+        updateTextAnim(card.querySelector('.term-monthly'), fmt(monthly));
+        updateTextAnim(card.querySelector('.term-total'), `Top: ${fmt(total)}`);
+        updateTextAnim(card.querySelector('.term-interest'), `Faiz: ${fmt(interest)}`);
+        
+        if (t === s1.term) {
+            selectedMonthly = monthly;
+            selectedInterest = interest;
+            
+            // update badges
+            document.getElementById('effRateText').textContent = `Efektif Ayl\u0131k Oran: ${fmtPct(r*100)}`;
+            
+            document.getElementById('effRateTooltip').innerHTML = `
+                <div class="tooltip-row"><span>Baz Oran:</span><span>${fmtPct(BASE_RATES[t]*100)}</span></div>
+                <div class="tooltip-row"><span>Kredi Profili (${s1.credit}):</span><span>${CREDIT_ADJ[s1.credit] > 0 ? '+' : ''}${fmtPct(CREDIT_ADJ[s1.credit]*100)}</span></div>
+                <div class="tooltip-row"><span>M\u00FC\u015Fteri Tipi (${s1.customer}):</span><span>${CUSTOMER_ADJ[s1.customer] > 0 ? '+' : ''}${fmtPct(CUSTOMER_ADJ[s1.customer]*100)}</span></div>
+                ${isEV ? `<div class="tooltip-row"><span>EV \u0130ndirimi:</span><span>${fmtPct(EV_BONUS*100)}</span></div>` : ''}
+                ${s1.currency !== 'TRY' ? `<div class="tooltip-row"><span>D\u00F6viz (${s1.currency}):</span><span>${FX_ADJ[s1.currency] > 0 ? '+' : ''}${fmtPct(FX_ADJ[s1.currency]*100)}</span></div>` : ''}
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:6px 0">
+                <div class="tooltip-row" style="font-weight:600"><span>Toplam:</span><span>${fmtPct(r*100)}</span></div>
+            `;
+            
+            document.getElementById('evBadge').style.display = isEV ? 'inline-flex' : 'none';
+        }
+    });
+
+    // Auto-suggest CLV Tier
+    if (price < 8000000) {
+        s2.tier = "Giri\u015F";
+    } else if (price <= 20000000) {
+        s2.tier = "Orta";
+    } else {
+        s2.tier = "Premium";
+    }
+    document.querySelectorAll('#t2TierPills .pill').forEach(btn => {
+        if (btn.dataset.val === s2.tier) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+    // Ensure CLV updates automatically
+    calcT2();
+    
+    drawDonut(effDpAmt, loanAmt, selectedInterest);
+    updateTextAnim(document.getElementById('donutTotal'), fmt(effDpAmt + loanAmt + selectedInterest));
+    updateTextAnim(document.getElementById('legendDp'), fmt(effDpAmt));
+    updateTextAnim(document.getElementById('legendLoan'), fmt(loanAmt));
+    updateTextAnim(document.getElementById('legendInt'), fmt(selectedInterest));
+    
+    // Affordability
+    const affContainer = document.getElementById('affordabilitySection');
+    if (s1.income && s1.income > 0) {
+        affContainer.style.display = 'block';
+        const ratio = (selectedMonthly / s1.income) * 100;
+        const bar = document.getElementById('affBar');
+        const text = document.getElementById('affText');
+        const pctText = document.getElementById('affPct');
+        
+        pctText.textContent = `%${ratio.toFixed(1)}`;
+        bar.style.width = Math.min(ratio, 100) + '%';
+        
+        if (ratio < 30) {
+            bar.style.backgroundColor = 'var(--success)';
+            text.textContent = 'Rahat \u00F6deme kapasitesi';
+            text.style.color = 'var(--success)';
+        } else if (ratio < 40) {
+            bar.style.backgroundColor = 'var(--warning)';
+            text.textContent = 'Dikkatli planlama \u00F6nerilir';
+            text.style.color = 'var(--warning)';
+        } else {
+            bar.style.backgroundColor = 'var(--danger)';
+            text.textContent = 'Y\u00FCksek finansal y\u00FCk';
+            text.style.color = 'var(--danger)';
+        }
+    } else {
+        affContainer.style.display = 'none';
+    }
+    
+    // Currency Note
+    const fxNote = document.getElementById('fxNote');
+    if (s1.currency !== 'TRY') {
+        fxNote.style.display = 'block';
+        fxNote.textContent = 'D\u00F6viz kredileri i\u00E7in ek ko\u015Fullar ge\u00E7erlidir.';
+    } else {
+        fxNote.style.display = 'none';
+    }
+
+    // Audit
+    const finalR = effectiveRate(s1.term, s1.credit, s1.customer, isEV, s1.currency);
+    const auditParams = {
+        pv: loanAmt, r: finalR, n: s1.term, pmt: selectedMonthly, total: effDpAmt + loanAmt + selectedInterest, ...s1
+    };
+    const auditId = generateAuditId(auditParams);
+    document.getElementById('auditId').textContent = auditId;
+    document.getElementById('auditContent').textContent = `[ID] ${auditId}
+[FORMULA] PMT = PV * (r * (1 + r)^n) / ((1 + r)^n - 1)
+[SUBST] PMT = ${loanAmt.toFixed(2)} * (${finalR.toFixed(4)} * (1 + ${finalR.toFixed(4)})^${s1.term}) / ((1 + ${finalR.toFixed(4)})^${s1.term} - 1)
+[RESULT] Ayl\u0131k Taksit: ${selectedMonthly.toFixed(2)} TRY
+[PARAMS] Marka: ${s1.brand}, Model: ${s1.model} (${packageData.name}), Fiyat: ${price}, Pe\u015Finat: ${effDpAmt.toFixed(2)}
+[PARAMS] Kredi: ${s1.credit}, M\u00FC\u015Fteri: ${s1.customer}, D\u00F6viz: ${s1.currency}, Vade: ${s1.term} ay`;
+}
+
+// Logic T2
+const CLV_PARAMS = {
+  purchaseFreq: {
+    "\u0130lk Al\u0131c\u0131":      { minYears: 5, avgYears: 6, purchases: 2 },
+    "Tekrar Al\u0131c\u0131":   { minYears: 3, avgYears: 4, purchases: 3 },
+    "Filo M\u00FC\u015Fterisi": { minYears: 2, avgYears: 2.5, purchases: 4 }
+  },
+  vehiclePrice: {
+    "Giri\u015F":   4_000_000,
+    "Orta":    14_000_000,
+    "Premium": 25_000_000
+  },
+  financingMargin: {
+    "Kredili": 0.022,
+    "Pe\u015Fin":   0.000
+  },
+  annualService: {
+    "Giri\u015F":   { "Yetkili Servis": 18000, "Karma": 10000, "Ba\u011F\u0131ms\u0131z": 0 },
+    "Orta":    { "Yetkili Servis": 28000, "Karma": 16000, "Ba\u011F\u0131ms\u0131z": 0 },
+    "Premium": { "Yetkili Servis": 45000, "Karma": 25000, "Ba\u011F\u0131ms\u0131z": 0 }
+  },
+  kmMultiplier: (km) => 0.7 + (km / 20000) * 0.3,
+  accessoryRate: {
+    "\u0130lk Al\u0131c\u0131":      0.04,
+    "Tekrar Al\u0131c\u0131":   0.06,
+    "Filo M\u00FC\u015Fterisi": 0.03
+  },
+  discountRate: 0.15
+};
+
+function calculateCLV(segment, tier, brand, serviceUsage, financing, annualKm) {
+  const p = CLV_PARAMS;
+  const freq = p.purchaseFreq[segment];
+  const vehiclePrice = p.vehiclePrice[tier];
+  const numPurchases = freq.purchases;
+  const discountRate = p.discountRate;
+
+  const dealerMarginPct = 0.04;
+  let vehicleRevenue = 0;
+  for (let i = 0; i < numPurchases; i++) {
+    const year = Math.round((i + 1) * freq.avgYears);
+    if (year <= 10) {
+      vehicleRevenue += (vehiclePrice * dealerMarginPct) / Math.pow(1 + discountRate, year);
+    }
+  }
+
+  const finMargin = p.financingMargin[financing];
+  let financingRevenue = 0;
+  for (let i = 0; i < numPurchases; i++) {
+    const year = Math.round((i + 1) * freq.avgYears);
+    if (year <= 10) {
+      financingRevenue += (vehiclePrice * finMargin) / Math.pow(1 + discountRate, year);
+    }
+  }
+
+  const baseService = p.annualService[tier][serviceUsage];
+  const kmMult = p.kmMultiplier(annualKm);
+  let serviceRevenue = 0;
+  for (let year = 1; year <= 10; year++) {
+    serviceRevenue += (baseService * kmMult) / Math.pow(1 + discountRate, year);
+  }
+
+  const accRate = p.accessoryRate[segment];
+  let accessoryRevenue = 0;
+  for (let i = 0; i < numPurchases; i++) {
+    const year = Math.round((i + 1) * freq.avgYears);
+    if (year <= 10) {
+      accessoryRevenue += (vehiclePrice * accRate) / Math.pow(1 + discountRate, year);
+    }
+  }
+
+  const totalCLV = vehicleRevenue + financingRevenue + serviceRevenue + accessoryRevenue;
+
+  let classification, classColor;
+  if (totalCLV < 150000) {
+    classification = "Standart M\u00FC\u015Fteri"; classColor = "#8888a0";
+  } else if (totalCLV < 400000) {
+    classification = "De\u011Ferli M\u00FC\u015Fteri"; classColor = "#1c69d4";
+  } else if (totalCLV < 800000) {
+    classification = "Premium M\u00FC\u015Fteri"; classColor = "#f59e0b";
+  } else {
+    classification = "Stratejik M\u00FC\u015Fteri"; classColor = "#22c55e";
+  }
+
+  return {
+    total: totalCLV,
+    streams: { vehicle: vehicleRevenue, financing: financingRevenue, service: serviceRevenue, accessory: accessoryRevenue },
+    numPurchases, classification, classColor, avgPurchaseInterval: freq.avgYears
+  };
+}
+
+function calcT2() {
+    const res = calculateCLV(s2.segment, s2.tier, s2.brand, s2.service, s2.finance, s2.km);
+    
+    updateTextAnim(document.getElementById('clvTotal'), fmt(res.total));
+    const badge = document.getElementById('clvBadge');
+    updateTextAnim(badge, res.classification);
+    badge.style.backgroundColor = res.classColor + '26'; // approx 15% opacity
+    badge.style.color = res.classColor;
+    badge.style.border = `1px solid ${res.classColor}4d`;
+    
+    updateTextAnim(document.getElementById('clvPurchases'), `${res.numPurchases} ara\u00E7 / 10 y\u0131l`);
+    updateTextAnim(document.getElementById('clvInterval'), `~${res.avgPurchaseInterval} y\u0131lda bir`);
+    updateTextAnim(document.getElementById('clvAnnual'), fmt(res.total / 10));
+    
+    const insight = document.getElementById('clvInsight');
+    let text = "";
+    if (res.classification === 'Stratejik M\u00FC\u015Fteri') text = "Bu m\u00FC\u015Fteri i\u00E7in ki\u015Fiselle\u015Ftirilmi\u015F ili\u015Fki y\u00F6netimi ve \u00F6ncelikli servis \u00F6nerilir.";
+    else if (res.classification === 'Premium M\u00FC\u015Fteri') text = "Uzun vadeli sadakat program\u0131 ve periyodik ileti\u015Fim de\u011Fer yarat\u0131r.";
+    else if (res.classification === 'De\u011Ferli M\u00FC\u015Fteri') text = "Tekrar al\u0131m d\u00F6neminde proaktif temas m\u00FC\u015Fteri de\u011Ferini art\u0131rabilir.";
+    else text = "Servis kalitesi ve memnuniyet bu m\u00FC\u015Fterinin de\u011Ferini y\u00FCkseltmenin en etkili yolu.";
+    updateTextAnim(insight, text);
+    insight.style.borderLeftColor = res.classColor;
+    
+    updateTextAnim(document.getElementById('legVeh'), fmt(res.streams.vehicle));
+    updateTextAnim(document.getElementById('legFin'), fmt(res.streams.financing));
+    updateTextAnim(document.getElementById('legSrv'), fmt(res.streams.service));
+    updateTextAnim(document.getElementById('legAcc'), fmt(res.streams.accessory));
+    
+    drawBarChart(res.streams.vehicle, res.streams.financing, res.streams.service, res.streams.accessory);
+}
+
+// Initialization & Binds
+function init() {
+    // T1 Init
+    updateModels();
+    document.getElementById('dpInput').value = s1.downValue;
+    
+    const bindPills = (group, key, stateObj, callback) => {
+        document.querySelectorAll(`#${group} .pill`).forEach(btn => {
+            btn.addEventListener('click', e => {
+                document.querySelectorAll(`#${group} .pill`).forEach(x => x.classList.remove('active'));
+                e.target.classList.add('active');
+                stateObj[key] = e.target.dataset.val;
+                callback();
+            });
+        });
+    };
+    
+    // Brand pill special handling
+    document.querySelectorAll('#brandPills .pill').forEach(btn => {
+        btn.addEventListener('click', e => {
+            document.querySelectorAll('#brandPills .pill').forEach(x => x.classList.remove('active'));
+            e.target.classList.add('active');
+            s1.brand = e.target.dataset.val;
+            updateModels();
+            s1.downMode = 'pct';
+            s1.downValue = CATALOG[s1.brand].minDownPct;
+            document.getElementById('dpToggle').textContent = '\u20BA / %';
+            document.getElementById('dpInput').value = s1.downValue;
+            calcT1();
+        });
+    });
+    
+    document.getElementById('modelSelect').addEventListener('change', e => {
+        s1.model = e.target.value;
+        updatePackages();
+        calcT1();
+    });
+    
+    document.getElementById('packageSelect').addEventListener('change', e => {
+        s1.pkgIndex = parseInt(e.target.value);
+        calcT1();
+    });
+    
+    const dpInput = document.getElementById('dpInput');
+    const dpToggle = document.getElementById('dpToggle');
+    dpInput.addEventListener('input', e => {
+        s1.downValue = parseFloat(e.target.value) || 0;
+        calcT1();
+    });
+    dpToggle.addEventListener('click', () => {
+        s1.downMode = s1.downMode === 'pct' ? 'amt' : 'pct';
+        const price = CATALOG[s1.brand].models[s1.model].packages[s1.pkgIndex].price;
+        if (s1.downMode === 'pct') {
+            s1.downValue = (s1.downValue / price) * 100;
+        } else {
+            s1.downValue = price * (s1.downValue / 100);
+        }
+        dpInput.value = s1.downMode === 'pct' ? Number(s1.downValue.toFixed(2)) : Math.round(s1.downValue);
+        calcT1();
+    });
+    
+    bindPills('custPills', 'customer', s1, calcT1);
+    bindPills('credPills', 'credit', s1, calcT1);
+    bindPills('currPills', 'currency', s1, calcT1);
+    
+    document.getElementById('incomeInput').addEventListener('input', e => {
+        s1.income = parseFloat(e.target.value) || 0;
+        calcT1();
+    });
+    
+    document.querySelectorAll('.term-card').forEach(card => {
+        card.addEventListener('click', e => {
+            const el = e.currentTarget;
+            if (el.classList.contains('disabled')) return;
+            document.querySelectorAll('.term-card').forEach(x => x.classList.remove('selected'));
+            el.classList.add('selected');
+            s1.term = parseInt(el.dataset.term);
+            calcT1();
+        });
+    });
+    
+    document.getElementById('auditToggle').addEventListener('click', () => {
+        const content = document.getElementById('auditContent');
+        const icon = document.getElementById('auditIcon');
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+            icon.textContent = '\u25B6';
+        } else {
+            content.classList.add('open');
+            icon.textContent = '\u25BC';
+        }
+    });
+    
+    document.getElementById('copyAuditBtn').addEventListener('click', e => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(document.getElementById('auditContent').textContent);
+        const orig = e.target.textContent;
+        e.target.textContent = 'Kopyaland\u0131!';
+        setTimeout(() => e.target.textContent = orig, 2000);
+    });
+    
+    // T2 Init
+    bindPills('t2SegPills', 'segment', s2, calcT2);
+    bindPills('t2TierPills', 'tier', s2, calcT2);
+    bindPills('t2SrvPills', 'service', s2, calcT2);
+    bindPills('t2FinPills', 'finance', s2, calcT2);
+    
+    document.getElementById('t2BrandSelect').addEventListener('change', e => {
+        s2.brand = e.target.value;
+        calcT2();
+    });
+    
+    const kmSlider = document.getElementById('kmSlider');
+    const kmLabel = document.getElementById('kmLabel');
+    kmSlider.addEventListener('input', e => {
+        const val = parseInt(e.target.value);
+        s2.km = val;
+        kmLabel.textContent = new Intl.NumberFormat('tr-TR').format(val) + ' km';
+        calcT2();
+    });
+    
+    // Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', e => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            e.target.classList.add('active');
+            const targetId = e.target.dataset.target;
+            document.getElementById(targetId).classList.add('active');
+            
+            // Re-render canvas immediately on display
+            if (targetId === 'tab1') calcT1();
+            if (targetId === 'tab2') calcT2();
+        });
+    });
+    
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (document.getElementById('tab1').classList.contains('active')) calcT1();
+            if (document.getElementById('tab2').classList.contains('active')) calcT2();
+        }, 100);
+    });
+    
+    // Initial Calc
+    calcT1();
+    calcT2();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
